@@ -1,5 +1,89 @@
 <app-header></app-header>
-<h1>
-  Saludos
-</h1>
+<div class="container">
+  <div class="filter">
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-content" (click)="tab(1)">
+            <mat-icon class="example-tab-icon">directions_subway</mat-icon>
+            Onibos
+          </div>
+        </ng-template>
+
+        <mat-selection-list #shoes [multiple]="false">
+          <mat-form-field class="form-filter">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter(filterValue)" [(ngModel)]="filterValue" placeholder="Ex. Mia"> <!-- (keyup)="applyFilter($event)" -->
+            <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-list-option *ngFor="let onibus of listOnibus" [value]="shoe" (click)="getListItinerario('il', onibus.id)">
+            {{onibus.nome}}
+          </mat-list-option>
+        </mat-selection-list>
+
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-content" (click)="tab(2)">
+            <mat-icon class="example-tab-icon">directions_bus</mat-icon>
+            Lotaçao
+          </div>
+
+        </ng-template>
+
+        <mat-selection-list #lotacao [multiple]="false">
+          <mat-list-option *ngFor="let lotacao of listLotacao" [value]="lotacao" (click)="print(onibus.nome)">
+            {{lotacao.nome}}
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-tab>
+
+
+    </mat-tab-group>
+  </div>
+  <div class="content">
+    
+      <mat-vertical-stepper>
+        <mat-step *ngFor="let item of numsIters; let i = index">
+          <ng-template matStepLabel>Step {{listItinerario[i].lat}}</ng-template>
+          
+          <a [href]="linkIter+listItinerario[i].lat+','+listItinerario[i].lng" target="_blank" rel="noopener noreferrer"></a>
+          <!-- 
+            <a [href]="linkIter+listItinerario[i].lat+','+listItinerario[i].lng" target="_blank" rel="noopener noreferrer"></a>
+            [routerLink]="['/routePath']"  
+            <p>{{listItinerario.nome}}, {{listItinerario.codigo}}, </p>
+          -->
+          <button mat-button matStepperNext>Next</button>
+        </mat-step>
+        
+      </mat-vertical-stepper>
+    
+    
+  </div>
+
+
+</div>
+<div style="height: 50px;"></div>
 <app-footer></app-footer>
+
+<!-- *ngFor="let item of listItinerario; let i = index"
+  <mat-step>
+        <ng-template matStepLabel>Step 2</ng-template>
+        <p>This content was also rendered lazily</p>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Step 3</ng-template>
+        <p>This content was rendered eagerly</p>
+        <button mat-button matStepperPrevious>Back</button>
+      </mat-step>
+-->
+
+<!-- 
+  **Doc
+  --mat-vertical-stepper
+  https://material.angular.io/components/stepper/examples
+-->
