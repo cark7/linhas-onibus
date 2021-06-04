@@ -9,10 +9,16 @@ export interface Lotacao{
     nome: string
 }
 export interface Locate {
-    lat: string,
-    lng: string
+    lat: any,
+    lng: any
 }
-export interface Itinerario{
+
+export interface ItinerarioHeader{
+    idlinha: number,
+    nome: string,
+    codigo: string,
+}
+export interface ItinerarioItems{ // prespuesta del servidor 
     idlinha: number,
     nome: string,
     codigo: string,

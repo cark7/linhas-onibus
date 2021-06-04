@@ -1,81 +1,68 @@
 <app-header></app-header>
 <div class="container">
   <div class="filter">
-    <mat-tab-group>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <div class="tab-content" (click)="tab(1)">
-            <mat-icon class="example-tab-icon">directions_subway</mat-icon>
-            Onibos
-          </div>
-        </ng-template>
-
-        <mat-selection-list #shoes [multiple]="false">
-          <mat-form-field class="form-filter">
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter(filterValue,1)" [(ngModel)]="filterValue" placeholder="Ex. Mia"> <!-- (keyup)="applyFilter($event)" -->
-            <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          <mat-list-option *ngFor="let onibus of listOnibus" [value]="shoe" (click)="getListItinerario('il', onibus.id)">
-            {{onibus.nome}}
-          </mat-list-option>
-        </mat-selection-list>
-
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <div class="tab-content" (click)="tab(2)">
-            <mat-icon class="example-tab-icon">directions_bus</mat-icon>
-            Lotaçao
-          </div>
-
-        </ng-template>
-
-        <mat-selection-list #lotacao [multiple]="false">
-          <mat-form-field class="form-filter">
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter(filterValue,2)" [(ngModel)]="filterValue" placeholder="Ex. Mia"> <!-- (keyup)="applyFilter($event)" -->
-            <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          <mat-list-option *ngFor="let lotacao of listLotacao" [value]="lotacao" (click)="print(onibus.nome)">
-            {{lotacao.nome}}
-          </mat-list-option>
-        </mat-selection-list>
-      </mat-tab>
-    </mat-tab-group>
+    <mat-form-field class="form-filter">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event,filterValue,1)" [(ngModel)]="filterValue" placeholder="Ex. Mia">
+      <!-- (keyup)="applyFilter($event)" -->
+      <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-selection-list #shoes [multiple]="false">
+      <mat-list-option *ngFor="let onibus of listOnibus" [value]="shoe" (click)="getListItinerario('il', onibus.id)">
+        {{onibus.nome}}
+      </mat-list-option>
+    </mat-selection-list>
   </div>
   <div class="content">
-    
-      <mat-vertical-stepper>
+    <mat-vertical-stepper>
+      <mat-step *ngFor="let item of listItinerario; let i = index">
+        <ng-template matStepLabel>Step {{i}}</ng-template>
+
+        <a [href]="linkIter+item.lat+','+item.lng" target="_blank"
+          rel="noopener noreferrer">
+          ir google
+        </a>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      <!-- 
         <mat-step *ngFor="let item of numsIters; let i = index">
-          <ng-template matStepLabel>Step {{listItinerario[i]}}</ng-template>
-          
-          <a [href]="linkIter+listItinerario[i].lat+','+listItinerario[i].lng" target="_blank" rel="noopener noreferrer"></a>
-          <!-- 
-            <a [href]="linkIter+listItinerario[i].lat+','+listItinerario[i].lng" target="_blank" rel="noopener noreferrer"></a>
-            [routerLink]="['/routePath']"  
-            <p>{{listItinerario.nome}}, {{listItinerario.codigo}}, </p>
-          -->
-          <button mat-button matStepperNext>Next</button>
-        </mat-step>
-        
-      </mat-vertical-stepper>
-      <div *ngIf="showMap">
-        <google-map  [center]="position">
-            <map-marker *ngFor="let item of numsIters; let i = index"
-                      [position]="listItinerario[i]"  label="label">
-            </map-marker>
-        </google-map>
-      </div>
+        <ng-template matStepLabel>Step {{i}}</ng-template>
+
+        <a [href]="linkIter+listItinerario[i].lat.slice(0,-11)+','+listItinerario[i].lng.slice(0,-11)" target="_blank"
+          rel="noopener noreferrer">
+          ir google
+        </a>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      -->
       
-    
+
+    </mat-vertical-stepper>
+    <div *ngIf="showMap">
+      <!-- 
+        <google-map 
+                     [center]="listItinerario[0]" [zoom]="zoom">
+        <map-polyline [path]="vertices"></map-polyline>
+      </google-map>
+      -->
+      
+
+      
+      <google-map [center]="listItinerario[0]" [zoom]="zoom"> height="400px" width="750px"
+        <map-marker *ngFor="let item of listItinerario; let i = index" [position]="item" [label]="label[index]" [title]="index">
+        </map-marker>
+      </google-map>
+
+      
+      
+    </div>
+
+
   </div>
 
-
+  
 </div>
 <div style="height: 50px;"></div>
 <app-footer></app-footer>
@@ -98,4 +85,20 @@
   **Doc
   --mat-vertical-stepper
   https://material.angular.io/components/stepper/examples
+-->
+
+<!-- otro tab
+   <mat-form-field class="form-filter">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter(filterValue,2)" [(ngModel)]="filterValue" placeholder="Ex. Mia">
+          <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-selection-list #lotacao [multiple]="false">
+          
+          <mat-list-option *ngFor="let lotacao of listLotacao" [value]="lotacao" (click)="print(onibus.nome)">
+            {{lotacao.nome}}
+          </mat-list-option>
+        </mat-selection-list>
 -->

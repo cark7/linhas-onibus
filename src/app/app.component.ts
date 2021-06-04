@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ServicesService } from './services/services.service';
-import { Onibus, Lotacao, Itinerario } from './services/modelos'
+import { Onibus, Lotacao, ItinerarioHeader, Locate } from './services/modelos'
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { isNgTemplate } from '@angular/compiler';
+import { element } from 'protractor';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,11 +17,14 @@ export class AppComponent {
 
   listLotacao: Lotacao[] = new Array
   listOnibus: Onibus[] = new Array
-  listItinerario: Itinerario[] = new Array
+  listOnibusOrigin: Onibus[] = new Array
+  //Itinerario
+  itinerarioHead: ItinerarioHeader
+  listItinerario: Locate[] = new Array
   numsIters: string[] = []
   filterValue: string
   showItinerario: boolean = false
-  linkIter: string = "https://www.google.com/maps/" 
+  linkIter: string = "https://www.google.com/maps/?q=" 
 
   //google
   showMap: boolean = false;
@@ -27,10 +32,19 @@ export class AppComponent {
     lat: -30.03076057730300000,
     lng: -51.22776510938000000
   }
-  label = {
+  label = [
+    {
     color: 'blue',
     text: 'Punto 1'
-  }
+    }
+  ]
+  center: google.maps.LatLngLiteral = {lat: 30.0318349, lng: -51.1705089}; 
+  zoom = 13;
+
+  vertices: google.maps.LatLngLiteral[];
+
+
+  titleMap= 'Punto 1'
   apiLoaded: Observable<boolean>;
   constructor(
     private services: ServicesService,
@@ -61,6 +75,7 @@ export class AppComponent {
       res => {
         if (type == 'o') {
           this.listOnibus = res
+          this.listOnibusOrigin = res
         }
         if (type == 'l') {
           this.listLotacao = res
@@ -75,11 +90,36 @@ export class AppComponent {
     this.services.getItinerario(type, id).subscribe(
       res => {
         console.log('Resp it: ',res);
-        this.listItinerario = res
-        this.numsIters = Object.keys(this.listItinerario)
+        this.itinerarioHead = {
+          idlinha: res.idlinha,
+          nome: res.nome,
+          codigo: res.codigo,
+        }
+        this.numsIters = Object.keys(res)
         this.numsIters.splice(this.numsIters.length -3, 3); 
-        console.log('carlos ', this.numsIters)
+        //this.listItinerario = res.splice(this.numsIters.length -3, 3)
+        this.listItinerario = Object.values(res)
+        this.listItinerario.splice(this.listItinerario.length-3,3)
+        console.log('carlos ', this.listItinerario)
+        this.listItinerario.forEach((e, index) => {
+          let item: Locate
+          item = {
+            lat: parseFloat(e.lat.slice(0,-11)),
+            lng: parseFloat(e.lng.slice(0,-11))
+          } 
+          this.listItinerario[index] = item
+        })
+        
+        this.vertices = this.listItinerario;
+        console.log('carlos 2', this.listItinerario)
+        console.log('carlos 2 itine', this.vertices)
+        /*
+        this.listItinerario.forEach(e => {
+          console.log(e) 
+        })
+        */
         this.showMap = true
+        
       },
       error =>{
         console.log("error: ", error)
@@ -87,7 +127,11 @@ export class AppComponent {
     )
     
   }
-  applyFilter(value: string, type: number) {
+  applyFilter(event: any,value: string, type: number) {
+    //console.log('event, ', event, 'tecla, ', event.keyCode )
+    if(event.keyCode == 46 || event.keyCode == 8){ // en caso de borrado reset el listado 
+      this.listOnibus = this.listOnibusOrigin
+    }
     if(type == 1){
       let tempList: Onibus[] = this.listOnibus
       console.log(' filter: ', value)
@@ -111,5 +155,16 @@ export class AppComponent {
     (type == 1)? this.getListOnibus('o'): this.getListOnibus('l')
   }
 
+  
+  
+  formatLocate(item:Locate){
+    let temLocate: Locate = {
+      lat: item.lat.slice(0,-11),
+      lng: item.lng.slice(0,-11)
+    }
+    return temLocate;
+  }
+
+  //console.log(getPersonFromJSON(personJSON));
 }
 

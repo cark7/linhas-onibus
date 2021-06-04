@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Onibus, Lotacao, Itinerario } from './modelos'
+import { Onibus, Lotacao } from './modelos'
 
 @Injectable({
   providedIn: 'root'
