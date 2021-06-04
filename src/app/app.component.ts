@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ServicesService } from './services/services.service';
 import { Onibus, Lotacao, Itinerario } from './services/modelos'
-import { query } from '@angular/animations';
-
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,11 +19,29 @@ export class AppComponent {
   numsIters: string[] = []
   filterValue: string
   showItinerario: boolean = false
-  linkIter: string = "https://www.google.com/maps/" //?q=
+  linkIter: string = "https://www.google.com/maps/" 
 
+  //google
+  showMap: boolean = false;
+  position = {
+    lat: -30.03076057730300000,
+    lng: -51.22776510938000000
+  }
+  label = {
+    color: 'blue',
+    text: 'Punto 1'
+  }
+  apiLoaded: Observable<boolean>;
   constructor(
-    private services: ServicesService
-  ){}
+    private services: ServicesService,
+    private httpClient: HttpClient
+  ){
+    this.apiLoaded = httpClient.jsonp('https://maps.google.com/maps/api/js?sensor=false', 'callback')
+        .pipe(
+          map(() => true),
+          catchError(() => of(false)),
+        );
+  }
   
   ngOnInit(){
     this.getListOnibus('o')
@@ -60,6 +79,7 @@ export class AppComponent {
         this.numsIters = Object.keys(this.listItinerario)
         this.numsIters.splice(this.numsIters.length -3, 3); 
         console.log('carlos ', this.numsIters)
+        this.showMap = true
       },
       error =>{
         console.log("error: ", error)
@@ -67,18 +87,28 @@ export class AppComponent {
     )
     
   }
-  applyFilter(value: string) {
-    let tempList: Onibus[] = this.listOnibus
-    console.log(' filter: ', value)
+  applyFilter(value: string, type: number) {
+    if(type == 1){
+      let tempList: Onibus[] = this.listOnibus
+      console.log(' filter: ', value)
+      
+      this.listOnibus = tempList.filter( e => {
+        return e.nome.toLowerCase().indexOf(value.toLowerCase()) > -1;
+      })
+    }else {
+      let tempList: Lotacao[] = this.listLotacao
+      console.log(' filter: ', value)
+      
+      this.listLotacao = tempList.filter( e => {
+        return e.nome.toLowerCase().indexOf(value.toLowerCase()) > -1;
+      })
+    }
     
-    this.listOnibus = tempList.filter( e => {
-      return e.nome.toLowerCase().indexOf(value.toLowerCase()) > -1;
-    })
     
   }
-  resetFiler(){
-    this.filterValue = ''
-    this.getListOnibus('o')
+  resetFiler(type: number){
+    this.filterValue = '';
+    (type == 1)? this.getListOnibus('o'): this.getListOnibus('l')
   }
 
 }

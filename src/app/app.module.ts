@@ -9,11 +9,15 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './services/material-module'
+
+import { GoogleMapsModule } from '@angular/google-maps';
+
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -22,7 +26,8 @@ import { MaterialModule } from './services/material-module'
     MaterialModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GoogleMapsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
