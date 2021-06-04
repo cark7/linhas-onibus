@@ -48,7 +48,7 @@
       
       <div *ngIf='isChecked'>
         <google-map 
-                     [center]="listItinerario[0]" [zoom]="zoom">
+                     [center]="listItinerario[0]" [zoom]="zoom" height="400px">
         <map-polyline [path]="vertices"></map-polyline>
       </google-map>
       </div>

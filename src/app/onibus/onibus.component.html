@@ -47,7 +47,7 @@
       </mat-slide-toggle>
       
       <div *ngIf='isChecked'>
-        <google-map 
+        <google-map  height="400px"
                      [center]="listItinerario[0]" [zoom]="zoom">
         <map-polyline [path]="vertices"></map-polyline>
       </google-map>
