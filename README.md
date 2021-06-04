@@ -6,7 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 sistema de consulta de linhas de ônibus e linhas de lotação, alem de itinerários com google maps
 
 # Screenshot
-![](Docs/screenshot.png)
+![](Docs/screenshot.PNG)
 
 ## Development server
 
