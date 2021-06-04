@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LotacaoComponent } from './lotacao/lotacao.component'
+import { OnibusComponent } from './onibus/onibus.component'
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +19,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    
+    LotacaoComponent,
+    OnibusComponent
   ],
   imports: [
     BrowserModule,

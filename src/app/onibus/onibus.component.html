@@ -1,0 +1,107 @@
+<app-header></app-header>
+<div class="container">
+  <div class="filter">
+    <mat-form-field class="form-filter">
+      <mat-label>Filtro</mat-label>
+      <input matInput (keyup)="applyFilter($event,filterValue,1)" [(ngModel)]="filterValue" placeholder="Ex. Mia">
+      <!-- (keyup)="applyFilter($event)" -->
+      <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-selection-list #shoes [multiple]="false">
+      <mat-list-option *ngFor="let onibus of listOnibus" [value]="shoe" (click)="getListItinerario('il', onibus.id)">
+        {{onibus.nome}}
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+  <div class="content">
+    <div class="vertical-stepper">
+      <mat-vertical-stepper>
+        <mat-step *ngFor="let item of listItinerario; let i = index">
+          <ng-template matStepLabel>Parada {{i+1}}</ng-template>
+  
+          <a [href]="linkIter+item.lat+','+item.lng" target="_blank"
+            rel="noopener noreferrer">
+            Ver no google
+          </a>
+          <button mat-button matStepperNext>Segue</button>
+        </mat-step>
+      </mat-vertical-stepper>
+    </div>
+    
+      <!-- 
+        <mat-step *ngFor="let item of numsIters; let i = index">
+        <ng-template matStepLabel>Step {{i}}</ng-template>
+
+        <a [href]="linkIter+listItinerario[i].lat.slice(0,-11)+','+listItinerario[i].lng.slice(0,-11)" target="_blank"
+          rel="noopener noreferrer">
+          ir google
+        </a>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      -->
+    <div *ngIf="showMap">
+      <mat-slide-toggle color='primary' [(ngModel)]="isChecked">
+        {{(isChecked)?'Mapa Linha':'Mapa Pontos'}}
+      </mat-slide-toggle>
+      
+      <div *ngIf='isChecked'>
+        <google-map 
+                     [center]="listItinerario[0]" [zoom]="zoom">
+        <map-polyline [path]="vertices"></map-polyline>
+      </google-map>
+      </div>
+        
+      <div *ngIf='!isChecked'>
+        <google-map [center]="listItinerario[0]" height="400px" [zoom]="zoom">  <!-- width="750px" -->
+          <map-marker *ngFor="let item of listItinerario; let i = index" [position]="item" [label]="label[index]" [title]="index">
+          </map-marker>
+        </google-map>
+      </div>
+      
+    </div>
+
+
+  </div>
+
+  
+</div>
+<div style="height: 50px;"></div>
+<app-footer></app-footer>
+
+<!-- *ngFor="let item of listItinerario; let i = index"
+  <mat-step>
+        <ng-template matStepLabel>Step 2</ng-template>
+        <p>This content was also rendered lazily</p>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Step 3</ng-template>
+        <p>This content was rendered eagerly</p>
+        <button mat-button matStepperPrevious>Back</button>
+      </mat-step>
+-->
+
+<!-- 
+  **Doc
+  --mat-vertical-stepper
+  https://material.angular.io/components/stepper/examples
+-->
+
+<!-- otro tab
+   <mat-form-field class="form-filter">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter(filterValue,2)" [(ngModel)]="filterValue" placeholder="Ex. Mia">
+          <button *ngIf="filterValue" matSuffix mat-icon-button aria-label="Clear" (click)="resetFiler()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-selection-list #lotacao [multiple]="false">
+          
+          <mat-list-option *ngFor="let lotacao of listLotacao" [value]="lotacao" (click)="print(onibus.nome)">
+            {{lotacao.nome}}
+          </mat-list-option>
+        </mat-selection-list>
+-->
